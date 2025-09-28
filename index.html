@@ -1,283 +1,63 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Котики — я тебя люблю</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Милые котики</title>
 <style>
-  :root{
-    --pink: #ffe6ee;
-    --accent: #ff6fa3;
-    --muted: #caa3b2;
-    --shadow: rgba(0,0,0,0.08);
-  }
-  html,body{
-    height:100%;
+  body{
     margin:0;
-    font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background: var(--pink);
-    -webkit-font-smoothing:antialiased;
-    -moz-osx-font-smoothing:grayscale;
-  }
-
-  .wrap{
-    min-height:100vh;
+    background:#ffe6ee; /* светло-розовый фон */
     display:flex;
     align-items:center;
     justify-content:center;
-    padding:24px;
-    box-sizing:border-box;
+    min-height:100vh;
+    font-family:"Segoe UI",sans-serif;
   }
-
-  /* SVG container scales */
   .scene{
+    position:relative;
+    max-width:900px;
     width:100%;
-    max-width:1100px;
-    height:520px;
-    background: transparent;
   }
-
-  /* caption under scene */
-  .hint{
-    text-align:center;
-    color:#8b6f7a;
-    margin-top:12px;
-    font-size:14px;
+  .cats{
+    width:100%;
+    height:auto;
+    display:block;
   }
-
-  /* make clickable cursor */
-  .clickable{ cursor:pointer; }
-
-  /* small responsive tweaks */
-  @media (max-width:700px){
-    .scene{ height:420px; }
+  /* пузырь сообщения */
+  .bubble{
+    position:absolute;
+    left:25%;
+    top:30%;
+    background:#fff;
+    border:3px solid #ffd0e0;
+    border-radius:20px;
+    padding:10px 18px;
+    max-width:250px;
+    word-wrap:break-word;
+    overflow-wrap:break-word;
+    box-sizing:border-box;
+    font-size:20px;
+    color:#333;
+    box-shadow:0 4px 8px rgba(0,0,0,0.1);
+    animation: fly 3.5s ease-in-out infinite;
   }
-
-  /* hide the motion path visually (but keep it for reference) */
-  .motion-path { opacity:0.14; stroke-dasharray:6 4; }
-
-  /* speech bubble style inside SVG via CSS -- fallback applied inline too */
-  .bubble {
-    fill: white;
-    stroke: #ffd0e0;
-    stroke-width:1;
-    rx:12;
-    ry:12;
-  }
-
-  /* small pulsing for laptop screen */
-  .screen-pulse {
-    animation: pulse 2.6s ease-in-out infinite;
-    transform-origin: center;
-  }
-
-  @keyframes pulse{
-    0%{ opacity:1; transform:translateY(0); }
-    50%{ opacity:0.95; transform:translateY(-2px); }
-    100%{ opacity:1; transform:translateY(0); }
-  }
-
-  /* blinking eyes via CSS animation applied to elements with class 'blink' using SMIL fallback */
-  .blink { animation: blinkAnim 4s infinite; transform-origin:center; }
-  @keyframes blinkAnim{
-    0%, 93% { transform: scaleY(1); }
-    96% { transform: scaleY(0.05); }
-    100% { transform: scaleY(1); }
+  /* анимация полёта пузыря */
+  @keyframes fly {
+    0% { transform: translate(0,0) rotate(-5deg);}
+    25%{ transform: translate(100px,-60px) rotate(2deg);}
+    50%{ transform: translate(220px,-40px) rotate(-3deg);}
+    75%{ transform: translate(330px,-10px) rotate(1deg);}
+    100%{ transform: translate(440px,40px) rotate(0deg);}
   }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <!-- SVG scene -->
-  <svg class="scene" viewBox="0 0 1100 520" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Две кошки, сообщение летит по дуге">
-    <!-- Background rounded vignette -->
-    <defs>
-      <filter id="softShadow" x="-50%" y="-50%" width="200%" height="200%">
-        <feGaussianBlur stdDeviation="10" result="b"/>
-        <feOffset dx="0" dy="6" result="o"/>
-        <feMerge><feMergeNode in="o"/><feMergeNode in="SourceGraphic"/></feMerge>
-      </filter>
-    </defs>
-
-    <!-- (Optional) guide path that message will follow (semi-transparent) -->
-    <path id="arcPath" class="motion-path" d="M160 380 C 320 240 760 240 940 380" fill="none" stroke="#ffb6cf" stroke-width="6" stroke-linecap="round"/>
-
-    <!-- LEFT cat + laptop group -->
-    <g id="left-cat" class="clickable" transform="translate(60,70)">
-      <!-- shadow under cat -->
-      <ellipse cx="160" cy="360" rx="120" ry="24" fill="#000" opacity="0.06" />
-      <!-- body -->
-      <ellipse cx="160" cy="300" rx="70" ry="72" fill="#fff" stroke="#f1d8e1" stroke-width="2"/>
-      <!-- head -->
-      <g transform="translate(160,200)">
-        <circle cx="0" cy="0" r="56" fill="#fff" stroke="#f2d9e3" stroke-width="2"/>
-        <!-- ears -->
-        <polygon points="-40,-28 -18,-68 0,-32" fill="#fff" stroke="#f2d9e3" stroke-width="2"/>
-        <polygon points="40,-28 18,-68 0,-32" fill="#fff" stroke="#f2d9e3" stroke-width="2"/>
-        <!-- inner ear -->
-        <polygon points="-29,-36 -18,-62 0,-38" fill="#ffd6e6" />
-        <polygon points="29,-36 18,-62 0,-38" fill="#ffd6e6" />
-        <!-- eyes -->
-        <g transform="translate(-18,-2)" class="blink">
-          <ellipse cx="0" cy="2" rx="8" ry="8" fill="#2a2a2a"/>
-        </g>
-        <g transform="translate(18,-2)" class="blink">
-          <ellipse cx="0" cy="2" rx="8" ry="8" fill="#2a2a2a"/>
-        </g>
-        <!-- smile -->
-        <path d="M-14,20 Q0,32 14,20" fill="none" stroke="#2a2a2a" stroke-width="2" stroke-linecap="round"/>
-      </g>
-
-      <!-- laptop -->
-        <g transform="translate(60,320)">
-        <rect x="0" y="-18" width="200" height="12" rx="3" fill="#e9e0e6" stroke="#ddc8d4"/>
-        <rect x="16" y="-110" width="168" height="92" rx="8" class="screen-pulse" fill="#fff" stroke="#e7d3df"/>
-        <!-- small keyboard -->
-        <rect x="26" y="-18" width="148" height="6" rx="2" fill="#f5f0f4" />
-        <!-- laptop top edge -->
-        <rect x="14" y="-118" width="170" height="6" rx="3" fill="#f3e7ee"/>
-      </g>
-    </g>
-
-    <!-- RIGHT cat + phone group -->
-    <g id="right-cat" transform="translate(830,70)">
-      <!-- shadow -->
-      <ellipse cx="160" cy="360" rx="100" ry="22" fill="#000" opacity="0.06" />
-      <!-- body -->
-      <ellipse cx="160" cy="300" rx="68" ry="70" fill="#fff" stroke="#f1d8e1" stroke-width="2"/>
-      <!-- head -->
-      <g transform="translate(160,200)">
-        <circle cx="0" cy="0" r="54" fill="#fff" stroke="#f2d9e3" stroke-width="2"/>
-        <!-- ears -->
-        <polygon points="-38,-26 -18,-62 0,-30" fill="#fff" stroke="#f2d9e3" stroke-width="2"/>
-        <polygon points="38,-26 18,-62 0,-30" fill="#fff" stroke="#f2d9e3" stroke-width="2"/>
-        <!-- inner ear -->
-        <polygon points="-29,-36 -18,-58 0,-36" fill="#ffd6e6" />
-        <polygon points="29,-36 18,-58 0,-36" fill="#ffd6e6" />
-        <!-- eyes smiling -->
-        <path d="M-22,0 q8,12 22,0" fill="none" stroke="#2a2a2a" stroke-width="3" stroke-linecap="round"/>
-        <path d="M22,0 q-8,12 -22,0" fill="none" stroke="#2a2a2a" stroke-width="3" stroke-linecap="round"/>
-        <!-- smile -->
-        <path d="M-18,22 Q0,36 18,22" fill="none" stroke="#2a2a2a" stroke-width="2" stroke-linecap="round"/>
-      </g>
-
-      <!-- phone -->
-      <g transform="translate(120,300)">
-        <rect x="0" y="-90" width="60" height="110" rx="12" fill="#fff" stroke="#f3e6ed"/>
-        <rect x="8" y="-76" width="44" height="88" rx="8" fill="#fff0f6" stroke="#ffd6e6"/>
-        <!-- small smile on screen -->
-        <path d="M20,-22 q5,7 10,0" fill="none" stroke="#ff6fa3" stroke-width="2" stroke-linecap="round" transform="translate(0,20)"/>
-      </g>
-    </g>
-
-    <!-- MESSAGE group: bubble + text + optional heart icon; will animate along path using animateMotion -->
-    <g id="message" style="pointer-events:none">
-      <g id="bubbleGroup" transform="translate(0,0)">
-        <rect class="bubble" x="-120" y="-40" width="260" height="56" rx="16" ry="16" filter="url(#softShadow)"/>
-        <!-- little tail of bubble -->
-        <path d="M-30,16 L-10,28 L-20,10 Z" fill="white" stroke="#ffd0e0" stroke-width="1"/>
-        <!-- text -->
-        <text x="-40" y="-6" font-size="20" font-family="Segoe UI, Roboto, Arial" fill="#4a2a3a">Скучаю по тебе(</text>
-      </g>
-
-      <!-- animate motion along path -->
-      <animateMotion id="anim" dur="3.2s" repeatCount="indefinite" keyPoints="0;1" keyTimes="0;1" rotate="auto">
-        <mpath xlink:href="#arcPath" />
-      </animateMotion>
-    </g>
-
-    <!-- Optional invisible clickable overlay on left-cat to trigger one-shot animation -->
-    <rect id="left-click" x="40" y="60" width="260" height="380" fill="transparent" class="clickable" />
-
-    <!-- Optional invisible overlay on right-cat too -->
-    <rect id="right-click" x="760" y="60" width="260" height="380" fill="transparent" class="clickable" />
-
-    <!-- Small decorative hearts drifting up behind right cat (cosmetics) -->
-    <g transform="translate(830,30)" opacity="0.95">
-      <g transform="translate(260,350)">
-        <path d="M0,-10 C6,-28 34,-28 40,-10 C46,8 16,30 0,40 C-16,30 -46,8 -40,-10 C-34,-28 -6,-28 0,-10 Z" fill="#ffd0e0" opacity="0.7">
-          <animate attributeName="transform" values="translate(0,0) translate(0,-18) translate(0,0)" dur="3.4s" repeatCount="indefinite" />
-          <animate attributeName="opacity" values="0.7;0.15;0.7" dur="3.4s" repeatCount="indefinite" />
-        </path>
-      </g>
-    </g>
-  </svg>
-</div>
-
-<div class="hint">Кликни по левому котику или ноутбуку, чтобы отправить сообщение вручную. Анимация также идёт автоматически.</div>
-
-<script>
-    // JavaScript to restart SVG animateMotion on click (one-shot) plus keep the automatic loop.
-  (function(){
-    const leftClick = document.getElementById('left-click');
-    const rightClick = document.getElementById('right-click');
-    const anim = document.getElementById('anim');
-
-    function restartAnimationOnce(){
-      // To restart SMIL animateMotion, clone and replace it.
-      const parent = anim.parentNode;
-      const newAnim = anim.cloneNode(true);
-      parent.removeChild(anim);
-      parent.appendChild(newAnim);
-      // update reference variable
-      window.anim = newAnim;
-    }
-
-    // Attach click handlers to send on click
-    leftClick.addEventListener('click', function(e){
-      // single send => restart from start
-      restartAnimationOnce();
-    });
-
-    // clicking right cat also restarts (toy)
-    rightClick.addEventListener('click', function(){
-      restartAnimationOnce();
-    });
-
-    // For browsers that do not support SMIL or animateMotion well, fallback: animate by moving transform with JS
-    // Simple feature-detect: check for SVGAnimateElement constructor
-    if (typeof SVGAnimateElement === 'undefined'⠞⠟⠞⠵⠺⠟⠟⠵⠟⠵⠵⠵⠵⠵⠵⠺⠺⠞⠞⠺⠵⠺⠵⠟⠞⠟⠺⠺⠺{}))) {
-      // Fallback path-based JS animation
-      const bubble = document.getElementById('bubbleGroup');
-      const path = document.getElementById('arcPath');
-      const pathLen = path.getTotalLength();
-      let t = 0;
-      let playing = true;
-      let speed = 0.0035; // lower => slower
-      function step(){
-        if(playing){
-          t += speed;
-          if(t>1) t = 0;
-          // get point on path
-          const p = path.getPointAtLength(t*pathLen);
-          bubble.setAttribute('transform', `translate(${p.x},${p.y})`);
-        }
-        requestAnimationFrame(step);
-      }
-      step();
-
-      // on click, do an explicit fly once (set t from 0 to 1 quickly)
-      function flyOnce(){
-        let progress = 0;
-        const frames = 60;
-        const localSpeed = 1/ (frames*0.9);
-        function flyStep(){
-          progress += localSpeed;
-          if(progress>1) {
-            progress = 1;
-            // finish
-          } else {
-            requestAnimationFrame(flyStep);
-          }
-          const p = path.getPointAtLength(progress*pathLen);
-          bubble.setAttribute('transform', `translate(${p.x},${p.y})`);
-        }
-        flyStep();
-      }
-      leftClick.addEventListener('click', flyOnce);
-      rightClick.addEventListener('click', flyOnce);
-    }
-  })();
-</script>
+  <div class="scene">
+    <!-- милые котики (можно заменить ссылку на своё изображение в репозитории) -->
+    <img class="cats" src="A_digital_illustration_features_two_cartoon-style_.png" alt="Милые котики">
+    <!-- сообщение -->
+    <div class="bubble">я тебя люблю💖</div>
+  </div>
 </body>
 </html>
